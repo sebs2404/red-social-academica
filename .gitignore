@@ -1,0 +1,19 @@
+# Archivos compilados
+*.class
+*.jar
+
+# Carpeta de salida
+bin/
+out/
+build/
+
+# Archivos de IDE
+.idea/
+*.iml
+.vscode/
+*.project
+*.classpath
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
