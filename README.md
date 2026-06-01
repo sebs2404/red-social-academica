@@ -14,7 +14,6 @@ Red social orientada a la colaboración académica donde estudiantes y profesore
 crean perfiles, publican proyectos, forman equipos y solicitan colaboradores.
 
 ## Estructura del proyecto
-```
 src/red_social/
 ├── usuarios/       → Perfil, Estudiante, Profesor, Administrador
 ├── proyectos/      → Proyecto, Equipo, Miembro, Avance, Invitacion
@@ -23,16 +22,15 @@ src/red_social/
 ├── persistencia/   → Lectura y escritura de archivos .txt
 └── RedSocialMain.java
 datos/              → Archivos .txt generados por el programa
-```
 
 ## Ramas de trabajo
-- `main` → código estable integrado
-- `modulo-usuarios` → Módulo 1
-- `modulo-proyectos` → Módulo 2
-- `modulo-social` → Módulo 3
+- main → código estable integrado
+- modulo-usuarios → Módulo 1
+- modulo-proyectos → Módulo 2
+- modulo-social → Módulo 3
 
 ## Reglas del repositorio
-- Nunca trabajar directamente en `main`
-- Siempre hacer `git pull` antes de empezar
+- Nunca trabajar directamente en main
+- Siempre hacer git pull antes de empezar
 - Commits con mensajes descriptivos
 - Revisar el Pull Request antes de hacer merge
