@@ -6,7 +6,7 @@ Docente: Fernando Martínez Rodríguez
 
 ## Integrantes
 - Jhon Sebastian Avendaño Gutierrez — Módulo 2: Proyectos y Equipos
-- ___________________________ — Módulo 1: Usuarios y Perfiles
+- Nicolas Vargas Chavarro — Módulo 1: Usuarios y Perfiles
 - juan esteban silva — Módulo 3: Social, Eventos y Reportes
 
 ## Descripción
