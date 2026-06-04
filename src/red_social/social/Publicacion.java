@@ -21,7 +21,7 @@ public class Publicacion implements AccionesSociales {
     private String fecha;
     private String area;
     private ArrayList<Comentario> comentarios;
-    private ArrayList<String> reacciones;
+    private ArrayList<Perfil> likes;
     private ArrayList<Proyecto> suscripciones;
 
     // Constructor vacio
@@ -31,20 +31,40 @@ public class Publicacion implements AccionesSociales {
         this.fecha = "";
         this.area = "";
         this.comentarios = new ArrayList<>();
-        this.reacciones = new ArrayList<>();
+        this.likes = new ArrayList<>();
         this.suscripciones = new ArrayList<>();
+        
     }
+    
 
-    // Constructor completo
-    public Publicacion(Perfil autor, String contenido, String fecha, String area) {
-        this.autor = autor;
-        this.contenido = contenido;
-        this.fecha = fecha;
-        this.area = area;
-        this.comentarios = new ArrayList<>();
-        this.reacciones = new ArrayList<>();
-        this.suscripciones = new ArrayList<>();
-    }
+    // Constructor completo // juan corrigio esto ;)
+    public Publicacion(Perfil autor,
+            String contenido,
+            String fecha,
+            String area) {
+
+if(autor == null) {
+
+ throw new IllegalArgumentException(
+         "La publicacion requiere autor");
+}
+
+if(contenido == null ||
+contenido.isBlank()) {
+
+ throw new IllegalArgumentException(
+         "La publicacion no puede estar vacia");
+}
+
+this.autor = autor;
+this.contenido = contenido;
+this.fecha = fecha;
+this.area = area;
+
+this.comentarios = new ArrayList<>();
+this.likes = new ArrayList<>();
+this.suscripciones = new ArrayList<>();
+}
 
     // Getters
     public Perfil getAutor() { return this.autor; }
@@ -52,7 +72,9 @@ public class Publicacion implements AccionesSociales {
     public String getFecha() { return this.fecha; }
     public String getArea() { return this.area; }
     public ArrayList<Comentario> getComentarios() { return this.comentarios; }
-    public ArrayList<String> getReacciones() { return this.reacciones; }
+    public ArrayList<Perfil> getLikes() {
+        return this.likes;
+    }
 
     // Setters
     public void setAutor(Perfil autor) { this.autor = autor; }
@@ -69,14 +91,43 @@ public class Publicacion implements AccionesSociales {
 
     @Override
     public void comentar(String texto) {
-        // TODO: recibir el autor del comentario como parametro
-        System.out.println("Comentario agregado: " + texto);
-    }
 
+        System.out.println(
+                "Use agregarComentario()");
+    }
+    public void agregarComentario(
+            Perfil autor,
+            String texto,
+            String fecha) {
+
+        Comentario comentario =
+                new Comentario(
+                        autor,
+                        texto,
+                        fecha);
+
+        this.comentarios.add(comentario);
+    }
     @Override
     public void reaccionar(String tipo) {
-        this.reacciones.add(tipo);
-        System.out.println("Reaccion '" + tipo + "' agregada.");
+
+        System.out.println(
+                "Use el metodo darLike()");
+    }public void darLike(Perfil usuario) {
+
+        if(usuario == null) {
+
+            throw new IllegalArgumentException(
+                    "Usuario invalido");
+        }
+
+        if(this.likes.contains(usuario)) {
+
+            throw new IllegalArgumentException(
+                    "Ya reaccionaste a esta publicacion");
+        }
+
+        this.likes.add(usuario);
     }
 
     @Override
@@ -91,7 +142,7 @@ public class Publicacion implements AccionesSociales {
         System.out.println("[" + this.fecha + "] " + this.autor.getNombre() + " " + this.autor.getApellido());
         System.out.println("Area: " + this.area);
         System.out.println(this.contenido);
-        System.out.println("Reacciones: " + this.reacciones.size());
+        System.out.println(  "Likes: " + this.likes.size());
         System.out.println("Comentarios: " + this.comentarios.size());
         for (int i = 0; i < this.comentarios.size(); i++) {
             this.comentarios.get(i).mostrarComentario();
@@ -105,5 +156,16 @@ public class Publicacion implements AccionesSociales {
                this.contenido + ";" +
                this.fecha + ";" +
                this.area;
+    }
+    public String getNombreAutor() {
+
+        if(this.autor == null) {
+
+            return "Desconocido";
+        }
+
+        return this.autor.getNombre()
+                + " "
+                + this.autor.getApellido();
     }
 }
