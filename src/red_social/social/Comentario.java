@@ -24,12 +24,25 @@ public class Comentario {
         this.fecha = "";
     }
 
-    // Constructor completo
-    public Comentario(Perfil autor, String texto, String fecha) {
-        this.autor = autor;
-        this.texto = texto;
-        this.fecha = fecha;
-    }
+    // Constructor completo //juan corrigio esto para el uso de exepciones y que no hallan vacios en la creacion de publicaiones y eventos
+    public Comentario(Perfil autor,
+            String texto,
+            String fecha) {
+
+if(autor == null) {
+  throw new IllegalArgumentException(
+          "El comentario debe tener autor");
+}
+
+if(texto == null || texto.isBlank()) {
+  throw new IllegalArgumentException(
+          "El comentario no puede estar vacio");
+}
+
+this.autor = autor;
+this.texto = texto;
+this.fecha = fecha;
+}
 
     // Getters
     public Perfil getAutor() { return this.autor; }
