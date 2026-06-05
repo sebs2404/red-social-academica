@@ -6,8 +6,8 @@ Docente: Fernando Martínez Rodríguez
 
 ## Integrantes
 - Jhon Sebastian Avendaño Gutierrez — Módulo 2: Proyectos y Equipos
-- Nicolas Vargas Chavarro — Módulo 1: Usuarios y Perfiles
-- juan esteban silva — Módulo 3: Social, Eventos y Reportes
+- ___________________________ — Módulo 1: Usuarios y Perfiles
+- ___________________________ — Módulo 3: Social, Eventos y Reportes
 
 ## Descripción
 Red social orientada a la colaboración académica donde estudiantes y profesores

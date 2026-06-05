@@ -52,19 +52,4 @@ public class Administrador extends Perfil {
                this.getInstitucion() + ";" +
                this.nivelAcceso;
     }
-    //juan hizo esto :)
-    @Override
-    public boolean puedeCrearTutoria() {
-        return true;
-    }
-
-    @Override
-    public boolean puedeEliminarPublicaciones() {
-        return true;
-    }
-
-    @Override
-    public boolean puedeEliminarEventos() {
-        return true;
-    }
 }
