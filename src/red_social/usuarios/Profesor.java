@@ -61,8 +61,4 @@ public class Profesor extends Perfil {
                this.titulo + ";" +
                this.departamento;
     }
-    @Override //juan hizo esto :)
-    public boolean puedeCrearTutoria() {
-        return true;
-    }
 }

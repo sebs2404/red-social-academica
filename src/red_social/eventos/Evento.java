@@ -2,121 +2,116 @@
  * NOMBRE DEL PROGRAMA: Red Social Academica
  * MODULO: Social, Eventos y Reportes
  * CLASE: Evento
- * AUTOR: Jhon Sebastian Avendaño Gutierrez
- * FECHA:
+ * AUTOR: [jaun silva]
+ * FECHA: 2025
  */
 
 package red_social.eventos;
-import java.util.ArrayList;
 
-import red_social.social.Comentario;
-import red_social.usuarios.Perfil;
 import red_social.proyectos.Proyecto;
 
-// Clase que representa un evento academico (entrega, presentacion, etc.)
+// Evento academico: entrega, presentacion, mentoria, reunion
 public class Evento {
 
+    // Contador estatico para codigos base-26
+    private static int contadorGlobal = 0;
+
+    private String codigo;       // EVT-A, EVT-B, EVT-AA ...
     private String nombre;
     private String fecha;
-    private String tipo; // ENTREGA, PRESENTACION, REUNION
+    private String tipo;         // ENTREGA, PRESENTACION, MENTORIA, REUNION
     private String descripcion;
-    private Proyecto proyecto;
-    private Perfil creador;
-    private ArrayList<Comentario> comentarios;
+    private String correoCreador;
+    private Proyecto proyecto;   // puede ser null
 
-    // Constructor vacio 
     public Evento() {
-
-        this.nombre = "";
-        this.fecha = "";
-        this.tipo = "";
-        this.descripcion = "";
-        this.proyecto = null;
-
-        this.creador = null;//juan añadio algo aca
-        this.comentarios = new ArrayList<>();
+        this.codigo        = generarCodigo();
+        this.nombre        = "";
+        this.fecha         = "";
+        this.tipo          = "";
+        this.descripcion   = "";
+        this.correoCreador = "";
+        this.proyecto      = null;
     }
 
-    // Constructor completo
-    public Evento(String nombre,
-            String fecha,
-            String tipo,
-            String descripcion,
-            Proyecto proyecto) {
-
-  if(nombre == null || nombre.isBlank()) {
-
-      throw new IllegalArgumentException(
-              "El evento debe tener nombre");
-  }
-
-  if(fecha == null || fecha.isBlank()) {
-
-      throw new IllegalArgumentException(
-              "El evento debe tener fecha");
-  }
-
-  this.nombre = nombre;
-  this.fecha = fecha;
-  this.tipo = tipo;
-  this.descripcion = descripcion;
-  this.proyecto = proyecto;
-
-  this.creador = null;
-  this.comentarios = new ArrayList<>();
-}
-
-    // Getters
-    public String getNombre() { return this.nombre; }
-    public String getFecha() { return this.fecha; }
-    public String getTipo() { return this.tipo; }
-    public String getDescripcion() { return this.descripcion; }
-    public Proyecto getProyecto() { return this.proyecto; }
-    public Perfil getCreador() {
-        return creador;
+    public Evento(String nombre, String fecha, String tipo,
+                  String descripcion, String correoCreador, Proyecto proyecto) {
+        this.codigo        = generarCodigo();
+        this.nombre        = nombre;
+        this.fecha         = fecha;
+        this.tipo          = tipo;
+        this.descripcion   = descripcion;
+        this.correoCreador = correoCreador;
+        this.proyecto      = proyecto;
     }
 
-    // Setters
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    public void setFecha(String fecha) { this.fecha = fecha; }
-    public void setTipo(String tipo) { this.tipo = tipo; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-    public void setProyecto(Proyecto proyecto) { this.proyecto = proyecto; }
-    public void setCreador(Perfil creador) {
-        this.creador = creador;
+    // Constructor para cargar desde archivo (codigo ya conocido)
+    public Evento(String codigo, String nombre, String fecha, String tipo,
+                  String descripcion, String correoCreador) {
+        this.codigo        = codigo;
+        this.nombre        = nombre;
+        this.fecha         = fecha;
+        this.tipo          = tipo;
+        this.descripcion   = descripcion;
+        this.correoCreador = correoCreador;
+        this.proyecto      = null;
     }
 
-    // Muestra los datos del evento
+    // ── Generador codigo base-26 ──────────────────────────────────
+
+    private static String generarCodigo() {
+        contadorGlobal++;
+        return "EVT-" + aBase26(contadorGlobal);
+    }
+
+    public static void setContadorGlobal(int valor) { contadorGlobal = valor; }
+    public static int  getContadorGlobal()           { return contadorGlobal; }
+
+    static String aBase26(int n) {
+        StringBuilder sb = new StringBuilder();
+        while (n > 0) { n--; sb.insert(0, (char)('A' + (n % 26))); n /= 26; }
+        return sb.toString();
+    }
+
+    // ── Getters ───────────────────────────────────────────────────
+    public String getCodigo()        { return this.codigo; }
+    public String getNombre()        { return this.nombre; }
+    public String getFecha()         { return this.fecha; }
+    public String getTipo()          { return this.tipo; }
+    public String getDescripcion()   { return this.descripcion; }
+    public String getCorreoCreador() { return this.correoCreador; }
+    public Proyecto getProyecto()    { return this.proyecto; }
+
+    // ── Setters ───────────────────────────────────────────────────
+    public void setNombre(String nombre)             { this.nombre      = nombre; }
+    public void setFecha(String fecha)               { this.fecha       = fecha; }
+    public void setTipo(String tipo)                 { this.tipo        = tipo; }
+    public void setDescripcion(String descripcion)   { this.descripcion = descripcion; }
+    public void setCorreoCreador(String correo)      { this.correoCreador = correo; }
+    public void setProyecto(Proyecto proyecto)       { this.proyecto    = proyecto; }
+
     public void mostrarEvento() {
-        System.out.println("  Evento      : " + this.nombre);
+        System.out.println("  [" + this.codigo + "] " + this.nombre);
         System.out.println("  Tipo        : " + this.tipo);
         System.out.println("  Fecha       : " + this.fecha);
         System.out.println("  Descripcion : " + this.descripcion);
-        if (this.proyecto != null) {
+        if (this.proyecto != null)
             System.out.println("  Proyecto    : " + this.proyecto.getNombre());
-		}if (creador != null) {
-			System.out.println("  Creado por : " + creador.getNombre() + " " + creador.getApellido());
-		}System.out.println(
-		        "  Comentarios : "
-		                + comentarios.size());
-	}
+    }
 
-    // Convierte el evento a texto para persistencia
+    // Formato: codigo;nombre;fecha;tipo;descripcion;correoCreador;idProyecto
     public String aTexto() {
-        String idProyecto = (this.proyecto != null) ? this.proyecto.getId() : "SIN_PROYECTO";
-        return this.nombre + ";" + this.fecha + ";" + this.tipo + ";" + this.descripcion + ";" + idProyecto;
-    }///puede comentar los eventos
-    public void agregarComentario(
-            Perfil autor,
-            String texto,
-            String fecha) {
+        String dSafe = this.descripcion.replace(";", "[SC]");
+        String pid   = (this.proyecto != null) ? this.proyecto.getId() : "";
+        return this.codigo + ";" + this.nombre + ";" + this.fecha + ";" +
+               this.tipo  + ";" + dSafe + ";" + this.correoCreador + ";" + pid;
+    }
 
-        Comentario comentario =
-                new Comentario(
-                        autor,
-                        texto,
-                        fecha);
-
-        comentarios.add(comentario);
+    public static Evento desdeTexto(String linea) {
+        String[] p = linea.split(";", -1);
+        if (p.length < 6) return null;
+        String desc = p[4].replace("[SC]", ";");
+        return new Evento(p[0], p[1], p[2], p[3], desc, p[5]);
+        // p[6] = idProyecto → se resuelve fuera si es necesario
     }
 }

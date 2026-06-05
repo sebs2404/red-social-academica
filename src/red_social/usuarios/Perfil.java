@@ -70,17 +70,4 @@ public abstract class Perfil {
 
     // Metodo abstracto para convertir el objeto a linea de texto para persistencia
     public abstract String aTexto();
- // Permisos del sistema(juacreo esto :) )
-
-    public boolean puedeCrearTutoria() {
-        return false;
-    }
-
-    public boolean puedeEliminarPublicaciones() {
-        return false;
-    }
-
-    public boolean puedeEliminarEventos() {
-        return false;
-    }
 }

@@ -2,57 +2,67 @@
  * NOMBRE DEL PROGRAMA: Red Social Academica
  * MODULO: Social, Eventos y Reportes
  * CLASE: Feed
- * AUTOR: Jhon Sebastian Avendaño Gutierrez
- * FECHA:
+ * AUTOR: [juan silva]
+ * FECHA: 2025
  */
 
 package red_social.social;
 
 import java.util.ArrayList;
 
-// Clase que representa el feed social del sistema
+// Feed social: lista de publicaciones ordenadas del mas nuevo al mas antiguo
 public class Feed {
 
     private ArrayList<Publicacion> publicaciones;
 
-    // Constructor
     public Feed() {
         this.publicaciones = new ArrayList<>();
     }
 
-    // Getter
     public ArrayList<Publicacion> getPublicaciones() { return this.publicaciones; }
 
-    // Agrega una publicacion al feed
+    // Agrega al inicio para que lo mas reciente aparezca primero
     public void agregarPublicacion(Publicacion publicacion) {
-        this.publicaciones.add(publicacion);
-        System.out.println("Publicacion agregada al feed.");
+        this.publicaciones.add(0, publicacion);
     }
 
-    // Muestra todas las publicaciones
-    public void mostrarFeed() {
-        if (this.publicaciones.size() == 0) {
-            System.out.println("El feed esta vacio.");
-            return;
+    // Busca una publicacion por su codigo (PUB-A, PUB-AB, etc.)
+    public Publicacion buscarPorCodigo(String codigo) {
+        for (Publicacion p : this.publicaciones) {
+            if (p.getCodigo().equalsIgnoreCase(codigo)) return p;
         }
-        System.out.println("===== FEED =====");
+        return null;
+    }
+
+    // Elimina una publicacion por codigo (para moderacion)
+    public boolean eliminarPorCodigo(String codigo) {
         for (int i = 0; i < this.publicaciones.size(); i++) {
-            this.publicaciones.get(i).mostrarPublicacion();
+            if (this.publicaciones.get(i).getCodigo().equalsIgnoreCase(codigo)) {
+                this.publicaciones.remove(i);
+                return true;
+            }
         }
+        return false;
     }
 
     // Filtra publicaciones por area
-    public void filtrarPorArea(String area) {
-        System.out.println("===== FEED - AREA: " + area + " =====");
-        boolean encontro = false;
-        for (int i = 0; i < this.publicaciones.size(); i++) {
-            if (this.publicaciones.get(i).getArea().equalsIgnoreCase(area)) {
-                this.publicaciones.get(i).mostrarPublicacion();
-                encontro = true;
-            }
+    public ArrayList<Publicacion> filtrarPorArea(String area) {
+        ArrayList<Publicacion> resultado = new ArrayList<>();
+        for (Publicacion p : this.publicaciones) {
+            if (p.getArea().equalsIgnoreCase(area)) resultado.add(p);
         }
-        if (!encontro) {
-            System.out.println("No hay publicaciones en esta area.");
-        }
+        return resultado;
     }
+
+    // Filtra publicaciones de un autor especifico
+    public ArrayList<Publicacion> filtrarPorAutor(String correo) {
+        ArrayList<Publicacion> resultado = new ArrayList<>();
+        for (Publicacion p : this.publicaciones) {
+            if (p.getAutor() != null && p.getAutor().getCorreo().equalsIgnoreCase(correo))
+                resultado.add(p);
+        }
+        return resultado;
+    }
+
+    public int getTotalPublicaciones() { return this.publicaciones.size(); }
 }

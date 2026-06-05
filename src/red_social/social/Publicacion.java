@@ -2,8 +2,8 @@
  * NOMBRE DEL PROGRAMA: Red Social Academica
  * MODULO: Social, Eventos y Reportes
  * CLASE: Publicacion
- * AUTOR: Jhon Sebastian Avendaño Gutierrez
- * FECHA:
+ * AUTOR: [jaun silva]
+ * FECHA: 2025
  */
 
 package red_social.social;
@@ -13,159 +13,190 @@ import red_social.proyectos.Avance;
 import red_social.proyectos.Proyecto;
 import java.util.ArrayList;
 
-// Clase que representa una publicacion en el feed
+/*
+ * Publicacion en el feed social.
+ * Codigo unico autogenerado en base-26: PUB-A, PUB-B, PUB-AA ...
+ * Like simplificado: un usuario solo puede dar un like por publicacion.
+ */
 public class Publicacion implements AccionesSociales {
 
+    // Contador estatico para generar codigos base-26
+    private static int contadorGlobal = 0;
+
+    private String codigo;              // PUB-A, PUB-B, PUB-AA ...
     private Perfil autor;
     private String contenido;
     private String fecha;
     private String area;
-    private ArrayList<Comentario> comentarios;
-    private ArrayList<Perfil> likes;
-    private ArrayList<Proyecto> suscripciones;
+    private ArrayList<Comentario>   comentarios;
+    private ArrayList<String>       likesCorreos; // correos de quienes dieron like
+    private ArrayList<Proyecto>     suscripciones;
 
     // Constructor vacio
     public Publicacion() {
-        this.autor = null;
-        this.contenido = "";
-        this.fecha = "";
-        this.area = "";
-        this.comentarios = new ArrayList<>();
-        this.likes = new ArrayList<>();
-        this.suscripciones = new ArrayList<>();
-        
+        this.codigo       = generarCodigo();
+        this.autor        = null;
+        this.contenido    = "";
+        this.fecha        = "";
+        this.area         = "";
+        this.comentarios  = new ArrayList<>();
+        this.likesCorreos = new ArrayList<>();
+        this.suscripciones= new ArrayList<>();
     }
-    
 
-    // Constructor completo // juan corrigio esto ;)
-    public Publicacion(Perfil autor,
-            String contenido,
-            String fecha,
-            String area) {
+    // Constructor completo
+    public Publicacion(Perfil autor, String contenido, String fecha, String area) {
+        this.codigo       = generarCodigo();
+        this.autor        = autor;
+        this.contenido    = contenido;
+        this.fecha        = fecha;
+        this.area         = area;
+        this.comentarios  = new ArrayList<>();
+        this.likesCorreos = new ArrayList<>();
+        this.suscripciones= new ArrayList<>();
+    }
 
-if(autor == null) {
+    // Constructor para cargar desde archivo (codigo ya conocido)
+    public Publicacion(String codigo, Perfil autor, String contenido,
+                       String fecha, String area) {
+        this.codigo       = codigo;
+        this.autor        = autor;
+        this.contenido    = contenido;
+        this.fecha        = fecha;
+        this.area         = area;
+        this.comentarios  = new ArrayList<>();
+        this.likesCorreos = new ArrayList<>();
+        this.suscripciones= new ArrayList<>();
+    }
 
- throw new IllegalArgumentException(
-         "La publicacion requiere autor");
-}
+    // ── Generador codigo base-26 ──────────────────────────────────
 
-if(contenido == null ||
-contenido.isBlank()) {
+    private static String generarCodigo() {
+        contadorGlobal++;
+        return "PUB-" + aBase26(contadorGlobal);
+    }
 
- throw new IllegalArgumentException(
-         "La publicacion no puede estar vacia");
-}
+    public static void setContadorGlobal(int valor) {
+        contadorGlobal = valor;
+    }
 
-this.autor = autor;
-this.contenido = contenido;
-this.fecha = fecha;
-this.area = area;
+    public static int getContadorGlobal() { return contadorGlobal; }
 
-this.comentarios = new ArrayList<>();
-this.likes = new ArrayList<>();
-this.suscripciones = new ArrayList<>();
-}
+    static String aBase26(int n) {
+        StringBuilder sb = new StringBuilder();
+        while (n > 0) {
+            n--;
+            sb.insert(0, (char)('A' + (n % 26)));
+            n /= 26;
+        }
+        return sb.toString();
+    }
 
-    // Getters
-    public Perfil getAutor() { return this.autor; }
-    public String getContenido() { return this.contenido; }
-    public String getFecha() { return this.fecha; }
-    public String getArea() { return this.area; }
+    // ── Getters ───────────────────────────────────────────────────
+    public String getCodigo()                     { return this.codigo; }
+    public Perfil getAutor()                      { return this.autor; }
+    public String getContenido()                  { return this.contenido; }
+    public String getFecha()                      { return this.fecha; }
+    public String getArea()                       { return this.area; }
     public ArrayList<Comentario> getComentarios() { return this.comentarios; }
-    public ArrayList<Perfil> getLikes() {
-        return this.likes;
+    public int getCantidadComentarios() {
+        return this.comentarios.size();
+    }
+    public ArrayList<String> getLikesCorreos()    { return this.likesCorreos; }
+    public int getCantidadLikes()                 { return this.likesCorreos.size(); }
+
+    // ── Setters ───────────────────────────────────────────────────
+    public void setAutor(Perfil autor)       { this.autor    = autor; }
+    public void setContenido(String c)       { this.contenido= c; }
+    public void setFecha(String fecha)       { this.fecha    = fecha; }
+    public void setArea(String area)         { this.area     = area; }
+
+    // ── Like simple ───────────────────────────────────────────────
+
+    public void darLike(Perfil usuario) {
+        String correo = usuario.getCorreo();
+        if (!this.likesCorreos.contains(correo)) {
+            this.likesCorreos.add(correo);
+        }
     }
 
-    // Setters
-    public void setAutor(Perfil autor) { this.autor = autor; }
-    public void setContenido(String contenido) { this.contenido = contenido; }
-    public void setFecha(String fecha) { this.fecha = fecha; }
-    public void setArea(String area) { this.area = area; }
+    public void quitarLike(Perfil usuario) {
+        this.likesCorreos.remove(usuario.getCorreo());
+    }
 
-    // Implementacion de AccionesSociales
+    public boolean tienelike(Perfil usuario) {
+        return this.likesCorreos.contains(usuario.getCorreo());
+    }
+
+    // ── Comentarios ───────────────────────────────────────────────
+
+    public void agregarComentario(Comentario c) {
+        this.comentarios.add(c);
+    }
+
+    // ── AccionesSociales ──────────────────────────────────────────
+
     @Override
     public void publicarAvance(Avance avance) {
-        this.contenido = "Nuevo avance v" + avance.getVersion() + ": " + avance.getDescripcion();
-        System.out.println("Avance publicado en el feed.");
+        this.contenido = "Avance v" + avance.getVersion() + ": " + avance.getDescripcion();
     }
 
     @Override
     public void comentar(String texto) {
-
-        System.out.println(
-                "Use agregarComentario()");
+        System.out.println("Usa agregarComentario(Comentario) para comentar.");
     }
-    public void agregarComentario(
-            Perfil autor,
-            String texto,
-            String fecha) {
 
-        Comentario comentario =
-                new Comentario(
-                        autor,
-                        texto,
-                        fecha);
-
-        this.comentarios.add(comentario);
-    }
     @Override
     public void reaccionar(String tipo) {
-
-        System.out.println(
-                "Use el metodo darLike()");
-    }public void darLike(Perfil usuario) {
-
-        if(usuario == null) {
-
-            throw new IllegalArgumentException(
-                    "Usuario invalido");
-        }
-
-        if(this.likes.contains(usuario)) {
-
-            throw new IllegalArgumentException(
-                    "Ya reaccionaste a esta publicacion");
-        }
-
-        this.likes.add(usuario);
+        System.out.println("Usa darLike(Perfil) para reaccionar.");
     }
 
     @Override
     public void suscribirse(Proyecto proyecto) {
         this.suscripciones.add(proyecto);
-        System.out.println("Suscrito al proyecto: " + proyecto.getNombre());
     }
 
-    // Muestra la publicacion
-    public void mostrarPublicacion() {
-        System.out.println("===========================");
-        System.out.println("[" + this.fecha + "] " + this.autor.getNombre() + " " + this.autor.getApellido());
-        System.out.println("Area: " + this.area);
-        System.out.println(this.contenido);
-        System.out.println(  "Likes: " + this.likes.size());
-        System.out.println("Comentarios: " + this.comentarios.size());
-        for (int i = 0; i < this.comentarios.size(); i++) {
-            this.comentarios.get(i).mostrarComentario();
-        }
-        System.out.println("===========================");
-    }
+    // ── Persistencia ──────────────────────────────────────────────
 
-    // Convierte la publicacion a texto para persistencia
+    /*
+     * Formato: codigo;correoAutor;contenido;fecha;area;likes(c1,c2)
+     * El contenido NO puede tener ';' — se reemplaza por [SC]
+     */
     public String aTexto() {
-        return this.autor.getCorreo() + ";" +
-               this.contenido + ";" +
+        String cSafe   = this.contenido.replace(";", "[SC]").replace("\n", "[NL]");
+        String likesStr= String.join(",", this.likesCorreos);
+        return this.codigo + ";" +
+               (this.autor != null ? this.autor.getCorreo() : "") + ";" +
+               cSafe + ";" +
                this.fecha + ";" +
-               this.area;
+               this.area  + ";" +
+               likesStr;
     }
-    public String getNombreAutor() {
 
-        if(this.autor == null) {
-
-            return "Desconocido";
+    /*
+     * Solo reconstruye los campos simples (codigo, correoAutor, contenido, fecha, area, likes).
+     * El objeto Perfil se debe resolver en PersistenciaSocial buscando por correo en GestorUsuarios.
+     */
+    public static Publicacion desdeTexto(String linea) {
+        String[] p = linea.split(";", -1);
+        if (p.length < 5) return null;
+        String codigo    = p[0];
+        // p[1] = correoAutor → se resuelve fuera
+        String contenido = p[2].replace("[SC]", ";").replace("[NL]", "\n");
+        String fecha     = p[3];
+        String area      = p[4];
+        Publicacion pub  = new Publicacion(codigo, null, contenido, fecha, area);
+        if (p.length > 5 && !p[5].isEmpty()) {
+            for (String correo : p[5].split(",")) {
+                pub.getLikesCorreos().add(correo);
+            }
         }
+        return pub;
+    }
 
-        return this.autor.getNombre()
-                + " "
-                + this.autor.getApellido();
+    // Devuelve el correo del autor para reconstruir la referencia desde archivo
+    public String getCorreoAutorTexto(String linea) {
+        String[] p = linea.split(";", -1);
+        return p.length > 1 ? p[1] : "";
     }
 }

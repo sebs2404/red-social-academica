@@ -1,0 +1,2 @@
+ADMINISTRADOR;Admin;Sistema;admin@ud.edu.co;admin123;Universidad Distrital;1
+ESTUDIANTE;1;1;1;1;1;1;1;1
