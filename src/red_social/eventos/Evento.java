@@ -114,4 +114,6 @@ public class Evento {
         return new Evento(p[0], p[1], p[2], p[3], desc, p[5]);
         // p[6] = idProyecto → se resuelve fuera si es necesario
     }
+
+	
 }
